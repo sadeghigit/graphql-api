@@ -1,5 +1,6 @@
 import { InputType, Field } from '@nestjs/graphql';
 import { Matches, IsNotEmpty } from 'class-validator';
+import { UserRole } from './user.schema';
 
 @InputType()
 export class CreateUserInput {
@@ -11,4 +12,8 @@ export class CreateUserInput {
   @IsNotEmpty()
   @Field(() => String)
   password: string;
+
+  @IsNotEmpty()
+  @Field(() => UserRole)
+  userRole: UserRole;
 }

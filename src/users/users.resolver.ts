@@ -1,12 +1,27 @@
-import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  ID,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import { User } from './user.schema';
 import { CreateUserInput } from './create-user.input';
 import { UpdateUserInput } from './update-user.input';
+import { SessionsService } from 'src/sessions/sessions.service';
+import { SearchUserInput } from './search-users.input';
+import { Session } from 'src/sessions/session.schema';
+import { SearchSessionInput } from 'src/sessions/search-session.input';
 
 @Resolver(() => User)
 export class UsersResolver {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly sessionsService: SessionsService,
+    private readonly usersService: UsersService,
+  ) {}
 
   @Mutation(() => User)
   async createUser(
@@ -16,13 +31,15 @@ export class UsersResolver {
   }
 
   @Query(() => [User])
-  async getUsers(): Promise<User[]> {
-    return await this.usersService.getUsers();
+  async getUsers(@Args('searchInput') input: SearchUserInput): Promise<User[]> {
+    return await this.usersService.getUsers(input);
   }
 
   @Query(() => Number)
-  async getCount(): Promise<number> {
-    return await this.usersService.getCount();
+  async getUsersCount(
+    @Args('searchInput') input: SearchUserInput,
+  ): Promise<number> {
+    return await this.usersService.getUsersCount(input);
   }
 
   @Query(() => User, { nullable: true })
@@ -45,5 +62,11 @@ export class UsersResolver {
     @Args('id', { type: () => ID }) id: string,
   ): Promise<boolean> {
     return await this.usersService.removeUser(id);
+  }
+
+  @ResolveField()
+  async sessions(@Parent() user: User): Promise<Session[]> {
+    const searchInput: SearchSessionInput = { user: [user._id.toHexString()] };
+    return await this.sessionsService.getSessions(searchInput);
   }
 }
