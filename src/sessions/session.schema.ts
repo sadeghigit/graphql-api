@@ -19,7 +19,6 @@ export class Session {
   @Field(() => Date)
   updatedAt: Date;
 
-  @Field(() => String)
   @Prop({ type: String, required: true })
   refreshToken: string;
 

@@ -30,6 +30,9 @@ export class UsersService {
   async getUser(id: string): Promise<User | null> {
     return await this.userModel.findById(id);
   }
+  async getUserByMobile(mobile: string): Promise<User | null> {
+    return await this.userModel.findOne({ mobile });
+  }
 
   async updateUser(id: string, input: UpdateUserInput): Promise<boolean> {
     if (input.mobile) await this.duplicateCheck(input.mobile, id);
@@ -48,8 +51,8 @@ export class UsersService {
     if (searchInput.mobile) {
       where.mobile = { $regex: searchInput.mobile };
     }
-    if (searchInput.userRole) {
-      where.userRole = { $in: searchInput.userRole };
+    if (searchInput.role) {
+      where.role = { $in: searchInput.role };
     }
     if (searchInput.createdAt) {
       const date = searchInput.createdAt;

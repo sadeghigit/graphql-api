@@ -3,11 +3,11 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
 import { Session } from 'src/sessions/session.schema';
 
-export enum UserRole {
+export enum Role {
   ADMIN = 'ADMIN',
   USER = 'USER',
 }
-registerEnumType(UserRole, { name: 'UserRole' });
+registerEnumType(Role, { name: 'Role' });
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -30,9 +30,9 @@ export class User {
   @Prop()
   password: string;
 
-  @Field(() => UserRole)
-  @Prop({ type: String, enum: UserRole, required: true })
-  userRole: UserRole;
+  @Field(() => Role)
+  @Prop({ type: String, enum: Role, required: true })
+  role: Role;
 
   @Field(() => [Session])
   sessions: Session[];

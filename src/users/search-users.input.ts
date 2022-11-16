@@ -8,16 +8,16 @@ import {
   IsDate,
   IsArray,
 } from 'class-validator';
-import { UserRole } from './user.schema';
+import { Role } from './user.schema';
 
 @InputType()
 export class SearchUserInput {
-  @IsEnum(UserRole, { each: true })
+  @IsEnum(Role, { each: true })
   @IsArray()
   @NotEquals(null)
   @IsOptional()
-  @Field(() => [UserRole], { nullable: true })
-  userRole?: UserRole[];
+  @Field(() => [Role], { nullable: true })
+  role?: Role[];
 
   @NotEquals(null)
   @IsOptional()

@@ -7,11 +7,13 @@ import {
   ResolveField,
   Parent,
 } from '@nestjs/graphql';
+import { UseGuards } from '@nestjs/common';
 import { SessionsService } from './sessions.service';
 import { Session } from './session.schema';
 import { User } from 'src/users/user.schema';
 import { UsersService } from 'src/users/users.service';
 import { SearchSessionInput } from './search-session.input';
+import { GqlAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Resolver(() => Session)
 export class SessionsResolver {
@@ -21,6 +23,7 @@ export class SessionsResolver {
   ) {}
 
   @Query(() => [Session])
+  @UseGuards(GqlAuthGuard)
   async getSessions(
     @Args('searchInput') input: SearchSessionInput,
   ): Promise<Session[]> {
@@ -28,6 +31,7 @@ export class SessionsResolver {
   }
 
   @Query(() => Number)
+  @UseGuards(GqlAuthGuard)
   async getSessionsCount(
     @Args('searchInput') input: SearchSessionInput,
   ): Promise<number> {
@@ -35,6 +39,7 @@ export class SessionsResolver {
   }
 
   @Query(() => Session, { nullable: true })
+  @UseGuards(GqlAuthGuard)
   async getSession(
     @Args('id', { type: () => ID }) id: string,
   ): Promise<Session | null> {
@@ -42,6 +47,7 @@ export class SessionsResolver {
   }
 
   @Mutation(() => Boolean)
+  @UseGuards(GqlAuthGuard)
   async removeSession(
     @Args('id', { type: () => ID }) id: string,
   ): Promise<boolean> {
@@ -49,6 +55,7 @@ export class SessionsResolver {
   }
 
   @ResolveField()
+  @UseGuards(GqlAuthGuard)
   async user(@Parent() session: Session): Promise<User | null> {
     return await this.usersService.getUser(session.user.toHexString());
   }

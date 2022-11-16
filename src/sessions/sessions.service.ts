@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Session, SessionDocument } from './session.schema';
 import { CreateSessionInput } from './create-session.input';
-import RandExp from 'randexp';
+import * as RandExp from 'randexp';
 import { SearchSessionInput } from './search-session.input';
 
 @Injectable()
@@ -11,6 +11,7 @@ export class SessionsService {
   constructor(
     @InjectModel(Session.name) private sessionModel: Model<SessionDocument>,
   ) {}
+
   async createSession(input: CreateSessionInput): Promise<Session> {
     const refreshToken = new RandExp(/^[0-9a-zA-Z]{64}$/).gen();
     return await this.sessionModel.create({ ...input, refreshToken });
@@ -28,6 +29,12 @@ export class SessionsService {
 
   async getSession(id: string): Promise<Session | null> {
     return await this.sessionModel.findById(id);
+  }
+
+  async getSessionByRefershToken(
+    refreshToken: string,
+  ): Promise<Session | null> {
+    return await this.sessionModel.findOne({ refreshToken });
   }
 
   async removeSession(id: string): Promise<boolean> {
