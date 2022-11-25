@@ -1,9 +1,12 @@
 import { InputType, Field } from '@nestjs/graphql';
 import { Matches, IsNotEmpty } from 'class-validator';
-import { Role } from './user.schema';
 
 @InputType()
-export class CreateUserInput {
+export class Register1Input {
+  @IsNotEmpty()
+  @Field(() => String)
+  name: string;
+
   @IsNotEmpty()
   @Matches(/^09[0-9]{9}$/)
   @Field(() => String)
@@ -12,8 +15,4 @@ export class CreateUserInput {
   @IsNotEmpty()
   @Field(() => String)
   password: string;
-
-  @IsNotEmpty()
-  @Field(() => Role)
-  role: Role;
 }

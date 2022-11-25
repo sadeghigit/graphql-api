@@ -1,3 +1,4 @@
+import { UseGuards } from '@nestjs/common';
 import {
   Resolver,
   Query,
@@ -7,18 +8,18 @@ import {
   ResolveField,
   Parent,
 } from '@nestjs/graphql';
-import { UsersService } from './users.service';
-import { User } from './user.schema';
-import { CreateUserInput } from './create-user.input';
-import { UpdateUserInput } from './update-user.input';
-import { SessionsService } from 'src/sessions/sessions.service';
-import { SearchUserInput } from './search-users.input';
-import { Session } from 'src/sessions/session.schema';
-import { SearchSessionInput } from 'src/sessions/search-session.input';
-import { UseGuards } from '@nestjs/common';
+import { Types } from 'mongoose';
 import { GqlAuthGuard } from 'src/auth/jwt-auth.guard';
-import { CurrentUser } from 'src/auth/current-user';
-import { JwtPayload } from 'src/auth/jwt.strategy';
+import { PaginateInput } from 'src/common/input-types/paginate.input';
+import { ParseIdPipe } from 'src/common/parse-id.pipe';
+import { SearchSessionInput } from 'src/sessions/input-types/search-session.input';
+import { Session } from 'src/sessions/schemas/session.schema';
+import { SessionsService } from 'src/sessions/sessions.service';
+import { CreateUserInput } from './input-types/create-user.input';
+import { SearchUserInput } from './input-types/search-users.input';
+import { UpdateUserInput } from './input-types/update-user.input';
+import { User } from './schemas/user.schema';
+import { UsersService } from './users.service';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -27,55 +28,52 @@ export class UsersResolver {
     private readonly usersService: UsersService,
   ) {}
 
-  @Mutation(() => User)
-  @UseGuards(GqlAuthGuard)
-  async createUser(
-    @Args('createUserInput') input: CreateUserInput,
-  ): Promise<User> {
-    return await this.usersService.createUser(input);
-  }
-
-  @UseGuards(GqlAuthGuard)
-  @Query(() => User, { nullable: true })
-  async getProfile(@CurrentUser() user: JwtPayload): Promise<User | null> {
-    return await this.usersService.getUser(user.userId);
-  }
-
   @Query(() => [User])
   @UseGuards(GqlAuthGuard)
-  async getUsers(@Args('searchInput') input: SearchUserInput): Promise<User[]> {
-    return await this.usersService.getUsers(input);
+  async getUsers(
+    @Args('searchUserInput') searchUserInput: SearchUserInput,
+    @Args('paginateInput') paginateInput: PaginateInput,
+  ): Promise<User[]> {
+    return await this.usersService.getUsers(searchUserInput, paginateInput);
   }
 
   @Query(() => Number)
   @UseGuards(GqlAuthGuard)
   async getUsersCount(
-    @Args('searchInput') input: SearchUserInput,
+    @Args('searchUserInput') searchUserInput: SearchUserInput,
   ): Promise<number> {
-    return await this.usersService.getUsersCount(input);
+    return await this.usersService.getUsersCount(searchUserInput);
   }
 
   @Query(() => User, { nullable: true })
   @UseGuards(GqlAuthGuard)
   async getUser(
-    @Args('id', { type: () => ID }) id: string,
+    @Args('id', { type: () => ID }, ParseIdPipe) id: Types.ObjectId,
   ): Promise<User | null> {
     return await this.usersService.getUser(id);
+  }
+
+  @Mutation(() => User)
+  @UseGuards(GqlAuthGuard)
+  async createUser(
+    @Args('createUserInput') createUserInput: CreateUserInput,
+  ): Promise<User> {
+    return await this.usersService.createUser(createUserInput);
   }
 
   @Mutation(() => Boolean)
   @UseGuards(GqlAuthGuard)
   async updateUser(
-    @Args('id', { type: () => ID }) id: string,
-    @Args('updateUserInput') input: UpdateUserInput,
+    @Args('id', { type: () => ID }, ParseIdPipe) id: Types.ObjectId,
+    @Args('updateUserInput') updateUserInput: UpdateUserInput,
   ): Promise<boolean> {
-    return await this.usersService.updateUser(id, input);
+    return await this.usersService.updateUser(id, updateUserInput);
   }
 
   @Mutation(() => Boolean)
   @UseGuards(GqlAuthGuard)
   async removeUser(
-    @Args('id', { type: () => ID }) id: string,
+    @Args('id', { type: () => ID }, ParseIdPipe) id: Types.ObjectId,
   ): Promise<boolean> {
     return await this.usersService.removeUser(id);
   }

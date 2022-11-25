@@ -8,22 +8,10 @@ import {
   IsDate,
   IsArray,
 } from 'class-validator';
-import { Role } from './user.schema';
+import { UserRole } from '../schemas/user.schema';
 
 @InputType()
 export class SearchUserInput {
-  @IsEnum(Role, { each: true })
-  @IsArray()
-  @NotEquals(null)
-  @IsOptional()
-  @Field(() => [Role], { nullable: true })
-  role?: Role[];
-
-  @NotEquals(null)
-  @IsOptional()
-  @Field(() => String, { nullable: true })
-  mobile?: string;
-
   @NotEquals(null)
   @ArrayMaxSize(2)
   @ArrayMinSize(2)
@@ -41,4 +29,21 @@ export class SearchUserInput {
   @IsOptional()
   @Field(() => [Date], { nullable: true })
   updatedAt?: Date[];
+
+  @NotEquals(null)
+  @IsOptional()
+  @Field(() => String, { nullable: true })
+  name?: string;
+
+  @NotEquals(null)
+  @IsOptional()
+  @Field(() => String, { nullable: true })
+  mobile?: string;
+
+  @IsEnum(UserRole, { each: true })
+  @IsArray()
+  @NotEquals(null)
+  @IsOptional()
+  @Field(() => [UserRole], { nullable: true })
+  role?: UserRole[];
 }

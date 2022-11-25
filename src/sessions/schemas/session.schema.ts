@@ -1,7 +1,7 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, Types } from 'mongoose';
-import { User } from '../users/user.schema';
+import { User } from '../../users/schemas/user.schema';
 
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
