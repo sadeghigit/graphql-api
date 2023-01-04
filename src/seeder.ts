@@ -16,6 +16,13 @@ async function bootstrap() {
   const usersService = app.get<UsersService>(UsersService);
   const sessionsService = app.get<SessionsService>(SessionsService);
 
+  const admin = await usersService.createUser({
+    mobile: '09214096846',
+    password: '123456',
+    role: UserRole.ADMIN,
+    name: 'Hamed Sadeghi',
+  });
+
   for (let i = 0; i < 100; i++) {
     const user = await usersService.createUser({
       mobile: faker.phone.number('09#########'),
@@ -23,6 +30,7 @@ async function bootstrap() {
       role: faker.helpers.arrayElement([UserRole.USER, UserRole.ADMIN]),
       name: faker.name.fullName(),
     });
+
     for (let i = 0; i < 3; i++) {
       await sessionsService.createSession({ user: user._id });
     }
