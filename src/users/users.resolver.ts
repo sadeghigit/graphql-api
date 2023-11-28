@@ -4,6 +4,9 @@ import { User } from './schemas/user.schema';
 import { CreateUserInput } from './input-types/create-user.input';
 import { UpdateUserInput } from './input-types/update-user.input';
 import { Types } from 'mongoose';
+import { UseGuards } from '@nestjs/common';
+import { AuthGuard, Role } from '../auth/auth.guard';
+import { UserRole } from './schemas/user-role.enum';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -11,6 +14,8 @@ export class UsersResolver {
     private readonly usersService: UsersService,
   ) { }
 
+  @Role(UserRole.ADMIN)
+  @UseGuards(AuthGuard)
   @Mutation(() => User)
   async createUser(
     @Args('input') input: CreateUserInput,
@@ -18,16 +23,22 @@ export class UsersResolver {
     return this.usersService.createUser(input)
   }
 
+  @Role(UserRole.ADMIN)
+  @UseGuards(AuthGuard)
   @Query(() => [User])
   async getUsers(): Promise<User[]> {
     return this.usersService.getUsers()
   }
 
+  @Role(UserRole.ADMIN)
+  @UseGuards(AuthGuard)
   @Query(() => Int)
   async getUsersCount(): Promise<number> {
     return this.usersService.getUsersCount()
   }
 
+  @Role(UserRole.ADMIN)
+  @UseGuards(AuthGuard)
   @Query(() => User)
   async getUser(
     @Args('id', { type: () => ID }) id: Types.ObjectId,
@@ -35,6 +46,8 @@ export class UsersResolver {
     return this.usersService.getUser(id)
   }
 
+  @Role(UserRole.ADMIN)
+  @UseGuards(AuthGuard)
   @Mutation(() => Boolean)
   async updateUser(
     @Args('id', { type: () => ID }) id: Types.ObjectId,
@@ -43,6 +56,8 @@ export class UsersResolver {
     return this.usersService.updateUser(id, input)
   }
 
+  @Role(UserRole.ADMIN)
+  @UseGuards(AuthGuard)
   @Mutation(() => Boolean)
   async deleteUser(
     @Args('id', { type: () => ID }) id: Types.ObjectId,

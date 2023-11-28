@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersResolver } from './users.resolver';
 import { UsersService } from './users.service';
+import { AuthService } from '../auth/auth.service';
 
 describe('UsersResolver', () => {
   let resolver: UsersResolver;
@@ -9,6 +10,7 @@ describe('UsersResolver', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UsersResolver,
+        { provide: AuthService, useValue: {} },
         { provide: UsersService, useValue: {} }
       ],
     }).compile();

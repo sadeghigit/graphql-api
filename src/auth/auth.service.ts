@@ -7,6 +7,7 @@ import { UsersService } from '../users/users.service';
 import { RefreshResult } from './object-types/refresh-result';
 import { User } from '../users/schemas/user.schema';
 import { SessionsService } from '../sessions/sessions.service';
+import { JwtPayload } from './jwt-payload';
 
 @Injectable()
 export class AuthService {
@@ -18,7 +19,8 @@ export class AuthService {
 
   getAccessToken(user: User, expiresIn: number): string {
     const option = { secret: process.env.JWT_SECRET, expiresIn }
-    return this.jwtService.sign({ userId: user._id }, option)
+    const payload: JwtPayload = { userId: user._id, userRole: user.userRole }
+    return this.jwtService.sign(payload, option)
   }
 
   async loginPassword(input: LoginPasswordInput): Promise<LoginResult> {
@@ -36,6 +38,12 @@ export class AuthService {
     const user = await this.usersService.getUser(session.userId)
     const accessToken = this.getAccessToken(user, 3600)
     return { accessToken, expiresIn: 3600 }
+  }
+
+  async verifyToken(token: string): Promise<JwtPayload> {
+    const option = { secret: process.env.JWT_SECRET }
+    const payload = await this.jwtService.verifyAsync(token, option)
+    return { userId: payload.userId, userRole: payload.userRole }
   }
 
 }
