@@ -4,6 +4,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { UsersModule } from './users/users.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { OtpsModule } from './otps/otps.module';
 
 @Module({
     imports: [
@@ -13,7 +15,9 @@ import { UsersModule } from './users/users.module';
             driver: ApolloDriver,
             autoSchemaFile: true,
         }),
-        UsersModule
+        UsersModule,
+        ScheduleModule.forRoot(),
+        OtpsModule
     ],
 })
 export class AppModule { }
