@@ -5,8 +5,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { UsersModule } from './users/users.module';
 import { ScheduleModule } from '@nestjs/schedule';
-import { OtpsModule } from './otps/otps.module';
-import { SessionsModule } from './sessions/sessions.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
     imports: [
@@ -18,8 +17,7 @@ import { SessionsModule } from './sessions/sessions.module';
         }),
         UsersModule,
         ScheduleModule.forRoot(),
-        OtpsModule,
-        SessionsModule
+        AuthModule
     ],
 })
 export class AppModule { }
