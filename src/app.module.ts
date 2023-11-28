@@ -6,6 +6,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { UsersModule } from './users/users.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { AuthModule } from './auth/auth.module';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
     imports: [
@@ -17,7 +18,8 @@ import { AuthModule } from './auth/auth.module';
         }),
         UsersModule,
         ScheduleModule.forRoot(),
-        AuthModule
+        AuthModule,
+        ProfileModule
     ],
 })
 export class AppModule { }
