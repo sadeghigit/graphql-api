@@ -6,6 +6,7 @@ import request from 'supertest-graphql'
 import { Connection } from 'mongoose';
 import { getConnectionToken } from '@nestjs/mongoose';
 import { UsersService } from '../src/users/users.service';
+import { UserRole } from '../src/users/schemas/user-role.enum';
 
 
 describe('Auth Module (e2e)', () => {
@@ -24,7 +25,11 @@ describe('Auth Module (e2e)', () => {
     await connection.dropDatabase()
 
     const usersService = app.get(UsersService)
-    await usersService.createUser({ mobile: "09210000000", password: "123456" })
+    await usersService.createUser({
+      mobile: "09210000000",
+      password: "123456",
+      userRole: UserRole.ADMIN
+    })
   });
 
   afterAll(async () => {

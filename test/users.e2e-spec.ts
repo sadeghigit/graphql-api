@@ -30,7 +30,7 @@ describe('Users Module (e2e)', () => {
     const result = await request<any>(app.getHttpServer())
       .mutate(gql`
         mutation {
-          createUser(input: { mobile: "09210000000", password: "123456" }) {
+          createUser(input: { mobile: "09210000000", password: "123456", userRole:ADMIN }) {
              id createdAt, updatedAt, mobile 
           }
         }      
@@ -43,7 +43,7 @@ describe('Users Module (e2e)', () => {
   it('Get Users Query', async () => {
     const result = await request<any>(app.getHttpServer())
       .query(gql`
-        query { getUsers{id, createdAt, updatedAt, mobile} }
+        query { getUsers{id, createdAt, updatedAt, mobile, userRole} }
       `)
       .expectNoErrors()
     expect(result.data.getUsers.length).toBe(1)
@@ -62,7 +62,7 @@ describe('Users Module (e2e)', () => {
     const result = await request<any>(app.getHttpServer())
       .query(gql`
         query {
-          getUser(id:"${userId}"){id, createdAt, updatedAt, mobile} 
+          getUser(id:"${userId}"){id, createdAt, updatedAt, mobile, userRole} 
         }
       `)
       .expectNoErrors()
@@ -73,7 +73,7 @@ describe('Users Module (e2e)', () => {
     const result = await request<any>(app.getHttpServer())
       .mutate(gql`
         mutation{
-          updateUser(id :"${userId}",input:{mobile:"09210000001", password:"111111"})
+          updateUser(id :"${userId}",input:{mobile:"09210000001", password:"111111", userRole: MEMBER})
         }
       `)
       .expectNoErrors()

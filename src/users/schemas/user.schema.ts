@@ -1,6 +1,7 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
+import { UserRole } from './user-role.enum';
 
 @ObjectType()
 @Schema({ versionKey: false, timestamps: true })
@@ -20,6 +21,10 @@ export class User {
   @Field(() => String)
   @Prop({ type: String, required: true, unique: true })
   mobile: string;
+
+  @Field(() => UserRole)
+  @Prop({ type: String, required: true, enum: UserRole })
+  userRole: UserRole;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
