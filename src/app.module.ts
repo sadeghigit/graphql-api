@@ -6,6 +6,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { UsersModule } from './users/users.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { OtpsModule } from './otps/otps.module';
+import { SessionsModule } from './sessions/sessions.module';
 
 @Module({
     imports: [
@@ -17,7 +18,8 @@ import { OtpsModule } from './otps/otps.module';
         }),
         UsersModule,
         ScheduleModule.forRoot(),
-        OtpsModule
+        OtpsModule,
+        SessionsModule
     ],
 })
 export class AppModule { }
