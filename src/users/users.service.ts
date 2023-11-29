@@ -6,6 +6,7 @@ import { CreateUserInput } from './input-types/create-user.input';
 import { UpdateUserInput } from './input-types/update-user.input';
 import * as bcrypt from 'bcrypt'
 import { match } from 'assert';
+import { JwtPayload } from 'src/auth/jwt-payload';
 
 @Injectable()
 export class UsersService {
@@ -44,7 +45,9 @@ export class UsersService {
     return result.modifiedCount == 1
   }
 
-  async deleteUser(id: Types.ObjectId): Promise<boolean> {
+  async deleteUser(id: Types.ObjectId, jwt: JwtPayload): Promise<boolean> {
+    if (jwt.userId.equals(id))
+      throw new BadRequestException('can not delete yourself')
     const result = await this.userModel.deleteOne({ _id: id })
     return result.deletedCount == 1
   }
