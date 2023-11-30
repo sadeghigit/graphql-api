@@ -29,7 +29,9 @@ describe('Profile Module (e2e)', () => {
     const authService = app.get(AuthService)
 
     const admin = await usersService.createUser({
-      mobile: "09210000000", password: "123456", userRole: UserRole.MEMBER
+      mobile: "09210000000", password: "123456",
+      userRole: UserRole.MEMBER,
+      imageUrl: "/users/user-image/id.jpg"
     })
 
     const accessToken = authService.getAccessToken(admin, 3600)
@@ -44,7 +46,7 @@ describe('Profile Module (e2e)', () => {
   it('Get Profile Query', async () => {
     const result = await request<any>(app.getHttpServer())
       .query(gql`
-        query { getProfile {id, createdAt, updatedAt, mobile, userRole} }
+        query { getProfile {id, createdAt, updatedAt, mobile, userRole, imageUrl} }
       `)
       .set('authorization', authorization)
       .expectNoErrors()
@@ -56,7 +58,10 @@ describe('Profile Module (e2e)', () => {
     const result = await request<any>(app.getHttpServer())
       .mutate(gql`
         mutation{
-          updateProfile(input:{mobile:"09210000001", password:"111111"})
+          updateProfile(input:{
+            mobile:"09210000001", password:"111111",
+            imageUrl:"/users/user-image/id.jpg"
+        })
         }
       `)
       .set('authorization', authorization)

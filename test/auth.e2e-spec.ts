@@ -28,7 +28,8 @@ describe('Auth Module (e2e)', () => {
     await usersService.createUser({
       mobile: "09210000000",
       password: "123456",
-      userRole: UserRole.ADMIN
+      userRole: UserRole.ADMIN,
+      imageUrl: "/users/user-image/id.jpg"
     })
   });
 

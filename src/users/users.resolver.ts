@@ -7,8 +7,8 @@ import { Types } from 'mongoose';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard, Role } from '../auth/auth.guard';
 import { UserRole } from './schemas/user-role.enum';
-import { CurrentUser } from 'src/auth/current-user';
-import { JwtPayload } from 'src/auth/jwt-payload';
+import { CurrentUser } from '../auth/current-user';
+import { JwtPayload } from '../auth/jwt-payload';
 
 @Resolver(() => User)
 export class UsersResolver {

@@ -25,6 +25,10 @@ export class User {
   @Field(() => UserRole)
   @Prop({ type: String, required: true, enum: UserRole })
   userRole: UserRole;
+
+  @Field(() => String)
+  @Prop({ type: String, required: true})
+  imageUrl: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

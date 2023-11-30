@@ -29,7 +29,9 @@ describe('Users Module (e2e)', () => {
     const authService = app.get(AuthService)
 
     const admin = await usersService.createUser({
-      mobile: "09130000000", password: "123456", userRole: UserRole.ADMIN
+      mobile: "09130000000", password: "123456",
+      userRole: UserRole.ADMIN,
+      imageUrl: "/users/user-image/id.jpg"
     })
 
     const accessToken = authService.getAccessToken(admin, 3600)
@@ -44,8 +46,10 @@ describe('Users Module (e2e)', () => {
     const result = await request<any>(app.getHttpServer())
       .mutate(gql`
         mutation {
-          createUser(input: { mobile: "09210000000", password: "123456", userRole:MEMBER }) {
-             id createdAt, updatedAt, mobile 
+          createUser(input: {
+             mobile: "09210000000", password: "123456",
+              userRole:MEMBER,imageUrl:"/users/user-image/id.jpg" }) {
+             id createdAt, updatedAt, mobile ,imageUrl
           }
         }      
       `)
@@ -58,7 +62,7 @@ describe('Users Module (e2e)', () => {
   it('Get Users Query', async () => {
     const result = await request<any>(app.getHttpServer())
       .query(gql`
-        query { getUsers{id, createdAt, updatedAt, mobile, userRole} }
+        query { getUsers{id, createdAt, updatedAt, mobile, userRole, imageUrl} }
       `)
       .set('authorization', authorization)
       .expectNoErrors()
@@ -79,7 +83,8 @@ describe('Users Module (e2e)', () => {
     const result = await request<any>(app.getHttpServer())
       .query(gql`
         query {
-          getUser(id:"${userId}"){id, createdAt, updatedAt, mobile, userRole} 
+          getUser(id:"${userId}"){
+            id, createdAt, updatedAt, mobile, userRole, imageUrl} 
         }
       `)
       .set('authorization', authorization)
@@ -91,7 +96,10 @@ describe('Users Module (e2e)', () => {
     const result = await request<any>(app.getHttpServer())
       .mutate(gql`
         mutation{
-          updateUser(id :"${userId}",input:{mobile:"09210000001", password:"111111", userRole: MEMBER})
+          updateUser(id :"${userId}",input:{
+            mobile:"09210000001", password:"111111", 
+            userRole: MEMBER, imageUrl:"/users/user-image/id.jpg"
+          })
         }
       `)
       .set('authorization', authorization)

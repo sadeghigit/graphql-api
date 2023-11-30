@@ -11,4 +11,7 @@ export class CreateUserInput {
 
   @Field(() => UserRole)
   userRole: UserRole;
+
+  @Field(() => String)
+  imageUrl: string;
 }
